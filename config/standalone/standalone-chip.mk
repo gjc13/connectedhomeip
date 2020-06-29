@@ -98,6 +98,7 @@ CHIP_CONFIGURE_OPTIONS = \
     --with-network-layer=inet \
     --with-target-network=sockets \
     --with-inet-endpoint="tcp udp" \
+    --with-device-layer=linux \
     --disable-tests \
     --disable-tools \
     --disable-docs \
@@ -137,7 +138,9 @@ STD_LIBS += \
     -lCHIP \
     -lInetLayer \
     -lnlfaultinjection \
-    -lSystemLayer
+    -lSystemLayer \
+    -lDeviceLayer \
+    -lCHIP
 
 STD_LIBS += $(shell pkg-config --libs openssl)
 

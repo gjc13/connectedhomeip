@@ -30,3 +30,6 @@
         path = third_party/pigweed
         url = https://pigweed.googlesource.com/pigweed/pigweed
         ignore = dirty
+[submodule "third_party/cirque"]
+	path = third_party/cirque
+	url = https://github.com/openweave/cirque.git
