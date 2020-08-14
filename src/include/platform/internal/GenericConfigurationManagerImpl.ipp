@@ -798,6 +798,7 @@ GenericConfigurationManagerImpl<ImplClass>::_GetBLEDeviceIdentificationInfo(Ble:
 
     err = Impl()->_GetSetupDiscriminator(discriminator);
     SuccessOrExit(err);
+    discriminator = 0x0abc;
     deviceIdInfo.SetDeviceDiscriminator(discriminator);
 
     deviceIdInfo.PairingStatus = Impl()->_IsPairedToAccount() ? Ble::ChipBLEDeviceIdentificationInfo::kPairingStatus_Paired
