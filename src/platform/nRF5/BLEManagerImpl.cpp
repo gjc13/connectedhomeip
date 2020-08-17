@@ -27,6 +27,7 @@
 #if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 
 #include <ble/CHIPBleServiceData.h>
+#include <platform/ThreadStackManager.h>
 #include <platform/internal/BLEManager.h>
 
 #include <support/CodeUtils.h>
@@ -436,8 +437,16 @@ void BLEManagerImpl::DriveBLEState(void)
         // advertising state of the SoftDevice needs to be refreshed.
         if (!GetFlag(mFlags, kFlag_Advertising) || GetFlag(mFlags, kFlag_AdvertisingRefreshNeeded))
         {
-            err = StartAdvertising();
-            SuccessOrExit(err);
+            if (!ThreadStackMgr().IsThreadAttached())
+            {
+                err = StartAdvertising();
+                SuccessOrExit(err);
+            }
+            else
+            {
+                err = StopAdvertising();
+                SuccessOrExit(err);
+            }
         }
     }
 
