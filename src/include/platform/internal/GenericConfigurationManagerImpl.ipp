@@ -800,8 +800,14 @@ GenericConfigurationManagerImpl<ImplClass>::_GetBLEDeviceIdentificationInfo(Ble:
     SuccessOrExit(err);
     deviceIdInfo.SetDeviceDiscriminator(discriminator);
 
+#if CHIP_DEVICE_CONFIG_ENABLE_THREAD
+    deviceIdInfo.PairingStatus = ThreadStackMgr().IsThreadAttached()
+        ? Ble::ChipBLEDeviceIdentificationInfo::kPairingStatus_Paired
+        : Ble::ChipBLEDeviceIdentificationInfo::kPairingStatus_Unpaired;
+#else
     deviceIdInfo.PairingStatus = Impl()->_IsPairedToAccount() ? Ble::ChipBLEDeviceIdentificationInfo::kPairingStatus_Paired
                                                               : Ble::ChipBLEDeviceIdentificationInfo::kPairingStatus_Unpaired;
+#endif
 
 exit:
     return err;
