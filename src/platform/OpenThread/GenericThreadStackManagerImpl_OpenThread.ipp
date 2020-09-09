@@ -899,7 +899,7 @@ template <class ImplClass>
 CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_JoinerStart(void)
 {
     CHIP_ERROR error = CHIP_NO_ERROR;
-
+#if 0
     Impl()->LockThreadStack();
     VerifyOrExit(!otDatasetIsCommissioned(mOTInst) && otThreadGetDeviceRole(mOTInst) == OT_DEVICE_ROLE_DISABLED,
                  error = MapOpenThreadError(OT_ERROR_INVALID_STATE));
@@ -938,7 +938,7 @@ exit:
     Impl()->UnlockThreadStack();
 
     ChipLogProgress(DeviceLayer, "Joiner start: %s", chip::ErrorStr(error));
-
+#endif
     return error;
 }
 

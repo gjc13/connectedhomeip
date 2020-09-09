@@ -34,7 +34,7 @@ _chip_banner() {
 
 _chip_banner "Environment bringup"
 
-git -C "$CHIP_ROOT" submodule update --init
+#git -C "$CHIP_ROOT" submodule update --init
 
 set +e
 source "$CHIP_ROOT/scripts/activate.sh"

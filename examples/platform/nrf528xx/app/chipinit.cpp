@@ -36,7 +36,9 @@ extern "C" {
 
 #if CHIP_ENABLE_OPENTHREAD
 #include <mbedtls/platform.h>
+#include <openthread-core-config.h>
 #include <openthread/cli.h>
+#include <openthread/config.h>
 #include <openthread/dataset.h>
 #include <openthread/error.h>
 #include <openthread/heap.h>
@@ -99,6 +101,7 @@ ret_code_t ChipInit()
 
     otSysInit(0, NULL);
 
+#if 0
     // Configure multiprotocol to work with BLE.
     {
         uint32_t retval = multiprotocol_802154_mode_set(MULTIPROTOCOL_802154_MODE_FAST_SWITCHING_TIMES);
@@ -109,6 +112,7 @@ ret_code_t ChipInit()
             APP_ERROR_HANDLER(CHIP_ERROR_INTERNAL);
         }
     }
+#endif
 
     ret = ThreadStackMgr().InitThreadStack();
     if (ret != CHIP_NO_ERROR)

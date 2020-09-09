@@ -153,9 +153,9 @@ void GenericThreadStackManagerImpl_FreeRTOS<ImplClass>::ThreadTaskMain(void * ar
     // Try starting joiner within 15m.
     self->mJoinerExpire = xTaskGetTickCount() + pdMS_TO_TICKS(15 * 60 * 1000);
 
-    TimerHandle_t joinerTimer = xTimerCreate("JoinerTimer", pdMS_TO_TICKS(10000), pdTRUE, self, &OnJoinerTimer);
-    VerifyOrDie(joinerTimer != NULL);
-    VerifyOrDie(pdPASS == xTimerStart(joinerTimer, portMAX_DELAY));
+    //TimerHandle_t joinerTimer = xTimerCreate("JoinerTimer", pdMS_TO_TICKS(10000), pdTRUE, self, &OnJoinerTimer);
+    //VerifyOrDie(joinerTimer != NULL);
+    //VerifyOrDie(pdPASS == xTimerStart(joinerTimer, portMAX_DELAY));
 
     while (true)
     {

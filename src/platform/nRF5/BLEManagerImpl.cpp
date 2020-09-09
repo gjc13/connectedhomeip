@@ -26,6 +26,8 @@
 
 #if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 
+#error "CHIPOBLE!"
+
 #include <ble/CHIPBleServiceData.h>
 #include <platform/internal/BLEManager.h>
 

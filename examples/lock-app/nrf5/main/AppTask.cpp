@@ -17,8 +17,8 @@
  *    limitations under the License.
  */
 
-#include "AppTask.h"
 #include "AppEvent.h"
+#include "AppTask.h"
 #include "DataModelHandler.h"
 #include "LEDWidget.h"
 #include "Server.h"
@@ -211,6 +211,8 @@ int AppTask::Init()
     return ret;
 }
 
+#if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
+
 void AppTask::HandleBLEConnectionOpened(chip::Ble::BLEEndPoint * endPoint)
 {
     ChipLogProgress(DeviceLayer, "AppTask: Connection opened");
@@ -267,10 +269,12 @@ void AppTask::HandleBLEMessageReceived(chip::Ble::BLEEndPoint * endPoint, chip::
     ThreadStackMgr().SetThreadEnabled(false);
     ThreadStackMgr().SetThreadProvision(networkInfo);
     ThreadStackMgr().SetThreadEnabled(true);
-#endif
+#endif // CHIP_ENABLE_OPENTHREAD
     endPoint->Close();
     chip::System::PacketBuffer::Free(buffer);
 }
+
+#endif // CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 
 void AppTask::AppTaskMain(void * pvParameter)
 {
@@ -285,7 +289,9 @@ void AppTask::AppTaskMain(void * pvParameter)
         APP_ERROR_HANDLER(ret);
     }
 
+#if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
     chip::DeviceLayer::ConnectivityMgr().AddCHIPoBLEConnectionHandler(&AppTask::HandleBLEConnectionOpened);
+#endif
     SetDeviceName("LockDemo._chip._udp.local.");
 
     while (true)

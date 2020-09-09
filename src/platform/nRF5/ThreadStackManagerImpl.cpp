@@ -35,6 +35,12 @@
 #include "boards.h"
 #include "nrf_log.h"
 
+#define GET_IN_ISR(x)                                                                                                              \
+    do                                                                                                                             \
+    {                                                                                                                              \
+        __asm volatile("mrs %0, ipsr" : "=r"(x)::"memory");                                                                        \
+    } while (0)
+
 namespace chip {
 namespace DeviceLayer {
 
@@ -112,7 +118,18 @@ using namespace ::chip::DeviceLayer;
  */
 extern "C" void otTaskletsSignalPending(otInstance * p_instance)
 {
-    ThreadStackMgrImpl().SignalThreadActivityPending();
+    uint32_t isInIsr;
+
+    GET_IN_ISR(isInIsr);
+
+    if (isInIsr)
+    {
+        otSysEventSignalPending();
+    }
+    else
+    {
+        ThreadStackMgrImpl().SignalThreadActivityPending();
+    }
 }
 
 /**

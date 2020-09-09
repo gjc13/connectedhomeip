@@ -91,6 +91,7 @@ uint32_t LogTimestamp(void)
 // SoftDevice Support
 // ================================================================================
 
+#if 0
 #if defined(SOFTDEVICE_PRESENT) && SOFTDEVICE_PRESENT
 
 static void OnSoCEvent(uint32_t sys_evt, void * p_context)
@@ -102,6 +103,7 @@ static void OnSoCEvent(uint32_t sys_evt, void * p_context)
 }
 
 #endif // defined(SOFTDEVICE_PRESENT) && SOFTDEVICE_PRESENT
+#endif
 
 // ================================================================================
 // J-Link Monitor Mode Debugging Support
@@ -166,6 +168,7 @@ int main(void)
     freertos_newlib_lock_test();
 #endif
 
+#if 0
 #if defined(SOFTDEVICE_PRESENT) && SOFTDEVICE_PRESENT
 
     NRF_LOG_INFO("Enabling SoftDevice");
@@ -207,6 +210,7 @@ int main(void)
     }
 
 #endif // defined(SOFTDEVICE_PRESENT) && SOFTDEVICE_PRESENT
+#endif
 
     ret = ChipInit();
     if (ret != NRF_SUCCESS)

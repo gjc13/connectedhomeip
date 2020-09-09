@@ -20,6 +20,10 @@ import("${nrf5_sdk_build_root}/nrf5_sdk.gni")
 # TODO(spang): Clean this up. We're mixing the vanilla Nordic SDK with forked
 # SDK code from OpenThread. See use_openthread_radio_driver below.
 
+config("nrf528xx_toble_config") {
+  defines = [ "SOFTDEVICE_OT_MANAGED=1" ]
+}
+
 nrf528xx_sdk_common = [
   "${openthread_root}/examples/platforms/nrf528xx/src/misc.c",
   "${openthread_root}/examples/platforms/nrf528xx/src/radio.c",
@@ -31,6 +35,7 @@ nrf528xx_sdk_common = [
   "${openthread_root}/examples/platforms/nrf528xx/src/logging.c",
   "${openthread_root}/examples/platforms/nrf528xx/src/system.c",
   "${openthread_root}/examples/platforms/nrf528xx/src/temp.c",
+  "${openthread_root}/examples/platforms/nrf528xx/src/toble.c",
   "${openthread_root}/examples/platforms/nrf528xx/src/platform-fem.h",
   "${openthread_root}/examples/platforms/nrf528xx/src/platform-nrf5.h",
 ]
@@ -61,6 +66,7 @@ static_library("libopenthread-nrf52840-softdevice-sdk") {
     "..:libopenthread-platform-utils",
   ]
   cflags = [ "-Wno-unused-but-set-variable" ]
+  public_configs = [ ":nrf528xx_toble_config" ]
 }
 
 config("libopenthread-nrf52840-transport_config") {
@@ -77,7 +83,10 @@ static_library("libopenthread-nrf52840-transport") {
     "${openthread_root}/examples/platforms/nrf528xx/src/transport/usb-cdc-uart.c",
   ]
 
-  public_configs = [ ":libopenthread-nrf52840-transport_config" ]
+  public_configs = [
+    ":libopenthread-nrf52840-transport_config",
+    ":nrf528xx_toble_config",
+  ]
 
   public_deps = [
     ":libnordicsemi_nrf52840",

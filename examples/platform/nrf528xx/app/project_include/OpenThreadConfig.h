@@ -49,6 +49,7 @@
 #define OPENTHREAD_CONFIG_JOINER_ENABLE 1
 #define OPENTHREAD_CONFIG_NCP_UART_ENABLE 1
 #define OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE 1
+#define OPENTHREAD_CONFIG_TOBLE_ENABLE 1
 
 // Use the Nordic-supplied default platform configuration for remainder
 // of OpenThread config options.

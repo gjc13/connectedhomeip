@@ -194,7 +194,7 @@ void PublishService()
     messageInfo.mPeerPort = kUDPBroadcastPort;
     otMessageAppend(message, deviceName, static_cast<uint16_t>(strlen(deviceName)));
 
-    error = otUdpSend(ThreadStackMgrImpl().OTInstance(), &mSocket, message, &messageInfo);
+    error = otUdpSend(&mSocket, message, &messageInfo);
 
     if (error != OT_ERROR_NONE && message != nullptr)
     {
