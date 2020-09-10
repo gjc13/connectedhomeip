@@ -31,6 +31,7 @@
 #include <unistd.h>
 
 #include <core/CHIPError.h>
+#include <inet/InetInterface.h>
 #include <inet/InetLayer.h>
 #include <inet/UDPEndPoint.h>
 #include <platform/ConnectivityManager.h>
@@ -269,6 +270,7 @@ bool DetermineCommand(int argc, char * argv[], Command * command)
 struct CommandArgs
 {
     IPAddress hostAddr;
+    uint32_t interfaceId;
     uint16_t port;
     uint16_t discriminator;
     uint32_t setupPINCode;
@@ -289,6 +291,21 @@ bool DetermineArgsBle(char * argv[], CommandArgs * commandArgs)
 
 bool DetermineArgsEcho(char * argv[], CommandArgs * commandArgs)
 {
+    char * deliminator = strchr(argv[2], '%');
+
+    if (deliminator != nullptr)
+    {
+        if (Inet::InterfaceNameToId(deliminator + 1, commandArgs->interfaceId) != CHIP_NO_ERROR)
+        {
+            fputs("Error: Invalid interface", stderr);
+        }
+        *deliminator = 0;
+    }
+    else
+    {
+        commandArgs->interfaceId = INET_NULL_INTERFACEID;
+    }
+
     if (!IPAddress::FromString(argv[2], commandArgs->hostAddr))
     {
         fputs("Error: Invalid device IP address", stderr);
@@ -480,14 +497,14 @@ CHIP_ERROR ExecuteCommand(DeviceController::ChipDeviceController * controller, C
 
     case Command::Echo:
         err = controller->ConnectDeviceWithoutSecurePairing(kRemoteDeviceId, commandArgs.hostAddr, NULL, OnConnect, OnMessage,
-                                                            OnError, commandArgs.port);
+                                                            OnError, commandArgs.port, commandArgs.interfaceId);
         VerifyOrExit(err == CHIP_NO_ERROR, fprintf(stderr, "Failed to connect to the device"));
         DoEchoIP(controller, commandArgs.hostAddr, commandArgs.port);
         break;
 
     default:
         err = controller->ConnectDeviceWithoutSecurePairing(kRemoteDeviceId, commandArgs.hostAddr, NULL, OnConnect, OnMessage,
-                                                            OnError, commandArgs.port);
+                                                            OnError, commandArgs.port, commandArgs.interfaceId);
         VerifyOrExit(err == CHIP_NO_ERROR, fprintf(stderr, "Failed to connect to the device"));
         DoOnOff(controller, command, commandArgs);
         controller->ServiceEventSignal();

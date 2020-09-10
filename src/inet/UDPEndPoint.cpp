@@ -332,7 +332,7 @@ INET_ERROR UDPEndPoint::Listen(void)
 
 #if LWIP_VERSION_MAJOR > 1 || LWIP_VERSION_MINOR >= 5
     udp_recv(mUDP, LwIPReceiveUDPMessage, this);
-#else  // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
+#else // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
     if (PCB_ISIPV6(mUDP))
         udp_recv_ip6(mUDP, LwIPReceiveUDPMessage, this);
     else
@@ -443,7 +443,7 @@ void UDPEndPoint::Free(void)
 
 #if CHIP_SYSTEM_CONFIG_USE_LWIP
     DeferredFree(kReleaseDeferralErrorTactic_Die);
-#else  // !CHIP_SYSTEM_CONFIG_USE_LWIP
+#else // !CHIP_SYSTEM_CONFIG_USE_LWIP
     Release();
 #endif // !CHIP_SYSTEM_CONFIG_USE_LWIP
 }
@@ -554,6 +554,10 @@ INET_ERROR UDPEndPoint::SendMsg(const IPPacketInfo * pktInfo, PacketBuffer * msg
     INET_FAULT_INJECT(FaultInjection::kFault_SendNonCritical,
                       if ((sendFlags & kSendFlag_RetainBuffer) == 0) PacketBuffer::Free(msg);
                       return INET_ERROR_NO_MEMORY;);
+
+#if !CHIP_SYSTEM_CONFIG_USE_LWIP
+    printf("[DBG]: interface=%d\n", pktInfo->Interface);
+#endif
 
 #if CHIP_SYSTEM_CONFIG_USE_LWIP
 
@@ -849,7 +853,7 @@ INET_ERROR UDPEndPoint::GetPCB(IPAddressType addrType)
         {
 #if LWIP_VERSION_MAJOR > 1 || LWIP_VERSION_MINOR >= 5
             mUDP = udp_new_ip_type(IPADDR_TYPE_V6);
-#else  // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
+#else // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
             mUDP = udp_new_ip6();
 #endif // LWIP_VERSION_MAJOR <= 1 || LWIP_VERSION_MINOR >= 5
         }
@@ -858,7 +862,7 @@ INET_ERROR UDPEndPoint::GetPCB(IPAddressType addrType)
         {
 #if LWIP_VERSION_MAJOR > 1 || LWIP_VERSION_MINOR >= 5
             mUDP = udp_new_ip_type(IPADDR_TYPE_V4);
-#else  // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
+#else // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
             mUDP = udp_new();
 #endif // LWIP_VERSION_MAJOR <= 1 || LWIP_VERSION_MINOR >= 5
         }
@@ -902,7 +906,7 @@ INET_ERROR UDPEndPoint::GetPCB(IPAddressType addrType)
 #else // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
 #if INET_CONFIG_ENABLE_IPV4
         pcbAddrType = PCB_ISIPV6(mUDP) ? kIPAddressType_IPv6 : kIPAddressType_IPv4;
-#else  // !INET_CONFIG_ENABLE_IPV4
+#else // !INET_CONFIG_ENABLE_IPV4
         pcbAddrType = kIPAddressType_IPv6;
 #endif // !INET_CONFIG_ENABLE_IPV4
 #endif // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
@@ -917,7 +921,7 @@ exit:
 
 #if LWIP_VERSION_MAJOR > 1 || LWIP_VERSION_MINOR >= 5
 void UDPEndPoint::LwIPReceiveUDPMessage(void * arg, struct udp_pcb * pcb, struct pbuf * p, const ip_addr_t * addr, u16_t port)
-#else  // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
+#else // LWIP_VERSION_MAJOR <= 1 && LWIP_VERSION_MINOR < 5
 void UDPEndPoint::LwIPReceiveUDPMessage(void * arg, struct udp_pcb * pcb, struct pbuf * p, ip_addr_t * addr, u16_t port)
 #endif // LWIP_VERSION_MAJOR > 1 || LWIP_VERSION_MINOR >= 5
 {
