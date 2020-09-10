@@ -157,6 +157,12 @@ void GenericThreadStackManagerImpl_FreeRTOS<ImplClass>::ThreadTaskMain(void * ar
     //VerifyOrDie(joinerTimer != NULL);
     //VerifyOrDie(pdPASS == xTimerStart(joinerTimer, portMAX_DELAY));
 
+    self->Impl()->LockThreadStack();
+    otLinkSetPanId(self->Impl()->OTInstance(), 1);
+    otIp6SetEnabled(self->Impl()->OTInstance(), true);
+    otIp6AddUnsecurePort(self->Impl()->OTInstance(), CHIP_PORT);
+    self->Impl()->UnlockThreadStack();
+
     while (true)
     {
         self->Impl()->LockThreadStack();
