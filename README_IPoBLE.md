@@ -21,6 +21,9 @@ Done
 Done
 > ifconfig up
 Done
+> unsecureport add 11095
+Done
+
 ```
 
 # Build & flash CHIP

@@ -153,11 +153,14 @@ void GenericThreadStackManagerImpl_FreeRTOS<ImplClass>::ThreadTaskMain(void * ar
     // Try starting joiner within 15m.
     self->mJoinerExpire = xTaskGetTickCount() + pdMS_TO_TICKS(15 * 60 * 1000);
 
-    //TimerHandle_t joinerTimer = xTimerCreate("JoinerTimer", pdMS_TO_TICKS(10000), pdTRUE, self, &OnJoinerTimer);
-    //VerifyOrDie(joinerTimer != NULL);
-    //VerifyOrDie(pdPASS == xTimerStart(joinerTimer, portMAX_DELAY));
+    // TimerHandle_t joinerTimer = xTimerCreate("JoinerTimer", pdMS_TO_TICKS(10000), pdTRUE, self, &OnJoinerTimer);
+    // VerifyOrDie(joinerTimer != NULL);
+    // VerifyOrDie(pdPASS == xTimerStart(joinerTimer, portMAX_DELAY));
 
     self->Impl()->LockThreadStack();
+
+    otExtAddress extAddr = { { 0x16, 0xfc, 0x86, 0x01, 0xeb, 0x1c, 0x68, 0x5a } };
+    otLinkSetExtendedAddress(self->Impl()->OTInstance(), &extAddr);
     otLinkSetPanId(self->Impl()->OTInstance(), 1);
     otIp6SetEnabled(self->Impl()->OTInstance(), true);
     otIp6AddUnsecurePort(self->Impl()->OTInstance(), CHIP_PORT);
