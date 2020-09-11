@@ -307,7 +307,7 @@ err_t GenericThreadStackManagerImpl_OpenThread_LwIP<ImplClass>::SendPacket(struc
     err_t lwipErr = ERR_OK;
     otError otErr;
     otMessage * pktMsg                  = NULL;
-    const otMessageSettings msgSettings = { true, OT_MESSAGE_PRIORITY_NORMAL };
+    const otMessageSettings msgSettings = { false, OT_MESSAGE_PRIORITY_NORMAL };
     uint16_t remainingLen;
 
     // Lock the OpenThread stack.
