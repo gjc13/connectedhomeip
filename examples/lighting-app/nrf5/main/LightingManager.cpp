@@ -94,11 +94,11 @@ void LightingManager::Set(bool aOn)
     if (aOn)
     {
         mState = kState_On;
-        nrf_gpio_pin_write(mGPIONum, LEDS_ACTIVE_STATE ? 1 : 0);
+        nrf_gpio_pin_write(mGPIONum, LEDS_ACTIVE_STATE ? 0 : 1);
     }
     else
     {
         mState = kState_Off;
-        nrf_gpio_pin_write(mGPIONum, LEDS_ACTIVE_STATE ? 0 : 1);
+        nrf_gpio_pin_write(mGPIONum, LEDS_ACTIVE_STATE ? 1 : 0);
     }
 }
