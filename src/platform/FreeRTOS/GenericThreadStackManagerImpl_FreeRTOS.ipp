@@ -159,8 +159,6 @@ void GenericThreadStackManagerImpl_FreeRTOS<ImplClass>::ThreadTaskMain(void * ar
 
     self->Impl()->LockThreadStack();
 
-    otExtAddress extAddr = { { 0x16, 0xfc, 0x86, 0x01, 0xeb, 0x1c, 0x68, 0x5a } };
-    otLinkSetExtendedAddress(self->Impl()->OTInstance(), &extAddr);
     otLinkSetPanId(self->Impl()->OTInstance(), 1);
     otIp6SetEnabled(self->Impl()->OTInstance(), true);
     otIp6AddUnsecurePort(self->Impl()->OTInstance(), CHIP_PORT);

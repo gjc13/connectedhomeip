@@ -48,7 +48,9 @@ extern "C" {
 #include <openthread/platform/openthread-system.h>
 #include <openthread/tasklet.h>
 #include <openthread/thread.h>
+#include <openthread/toble.h>
 #endif // CHIP_ENABLE_OPENTHREAD
+#include <ble/CHIPBleServiceData.h>
 #include <core/CHIPError.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <support/logging/CHIPLogging.h>
@@ -77,6 +79,30 @@ static void ot_free(void * p_ptr)
     vPortFree(p_ptr);
 }
 #endif
+
+static void SetupBLEAdvertisement()
+{
+    otInstance * instance = ThreadStackMgrImpl().OTInstance();
+    otTobleAdvConfig config;
+    uint8_t advData[31];
+    uint8_t advDataLength;
+    uint8_t scanRspData[31];
+    uint8_t scanRspDataLength;
+    ChipBLEDeviceIdentificationInfo deviceIdInfo;
+
+    ConfigurationMgr().GetBLEDeviceIdentificationInfo(deviceIdInfo);
+    otTobleEncodeAdvertisement(instance, &advData[0], &advDataLength);
+    otTobleEncodeScanResponse(instance, &scanRspData[0], &scanRspDataLength, reinterpret_cast<const uint8_t *>(&deviceIdInfo),
+                              sizeof(deviceIdInfo));
+    config.mType              = OT_TOBLE_ADV_IND;
+    config.mInterval          = 1000;
+    config.mData              = advData;
+    config.mLength            = advDataLength;
+    config.mScanRspData       = scanRspData;
+    config.mScanRspDataLength = scanRspDataLength;
+
+    otTobleAdvStart(instance, &config);
+}
 
 ret_code_t ChipInit()
 {
@@ -152,6 +178,7 @@ ret_code_t ChipInit()
 
     // Init ZCL Data Model
     InitDataModelHandler();
+    SetupBLEAdvertisement();
     StartServer(&sessions);
 
     return ret;
