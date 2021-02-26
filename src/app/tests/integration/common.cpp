@@ -24,7 +24,7 @@
 
 #include <errno.h>
 
-#include "common.h"
+#include <app/util/common.h>
 #include <core/CHIPCore.h>
 #include <core/CHIPTLVDebug.hpp>
 #include <platform/CHIPDeviceLayer.h>
