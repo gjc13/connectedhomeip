@@ -514,6 +514,7 @@ extern "C" void app_main()
         return;
     }
 
+    ConnectivityMgr().ClearWiFiStationProvision();
     statusLED1.Init(STATUS_LED_GPIO_NUM);
     // Our second LED doesn't map to any physical LEDs so far, just to virtual
     // "LED"s on devices with screens.

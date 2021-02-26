@@ -829,10 +829,11 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::DoInit(otInstanc
     // state change occurs.  Note that we reference the OnOpenThreadStateChange method
     // on the concrete implementation class so that that class can override the default
     // method implementation if it chooses to.
+    Impl()->LockThreadStack();
     otErr = otSetStateChangedCallback(otInst, ImplClass::OnOpenThreadStateChange, NULL);
     VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
 
-    // Enable automatic assignment of Thread advertised addresses.
+// Enable automatic assignment of Thread advertised addresses.
 #if OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE
     otIp6SetSlaacEnabled(otInst, true);
 #endif
@@ -841,17 +842,18 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::DoInit(otInstanc
     if (otThreadGetDeviceRole(mOTInst) == OT_DEVICE_ROLE_DISABLED && otDatasetIsCommissioned(otInst))
     {
         // Enable the Thread IPv6 interface.
-        otErr = otIp6SetEnabled(otInst, true);
-        VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
+        // otErr = otIp6SetEnabled(otInst, true);
+        // VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
 
-        otErr = otThreadSetEnabled(otInst, true);
-        VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
+        // otErr = otThreadSetEnabled(otInst, true);
+        // VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
 
-        ChipLogProgress(DeviceLayer, "OpenThread ifconfig up and thread start");
+        // ChipLogProgress(DeviceLayer, "OpenThread ifconfig up and thread start");
     }
+    Impl()->UnlockThreadStack();
 
 exit:
-    ChipLogProgress(DeviceLayer, "OpenThread started: %s", otThreadErrorToString(otErr));
+    // ChipLogProgress(DeviceLayer, "OpenThread started: %s", otThreadErrorToString(otErr));
     return err;
 }
 

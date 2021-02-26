@@ -20,6 +20,7 @@
 
 #include "DeviceNetworkProvisioningDelegateImpl.h"
 #include "ServiceProvisioning.h"
+#include "platform/ThreadStackManager.h"
 
 namespace chip {
 namespace DeviceLayer {
@@ -36,6 +37,21 @@ CHIP_ERROR DeviceNetworkProvisioningDelegateImpl::_ProvisionWiFiNetwork(const ch
     }
 
     return err;
+}
+
+CHIP_ERROR DeviceNetworkProvisioningDelegateImpl::_ProvisionThreadNetwork(DeviceLayer::Internal::DeviceNetworkInfo & threadData)
+{
+#if CHIP_ENABLE_OPENTHREAD
+    CHIP_ERROR error = CHIP_NO_ERROR;
+
+    SuccessOrExit(error = ThreadStackMgr().SetThreadEnabled(false));
+    SuccessOrExit(error = ThreadStackMgr().SetThreadProvision(threadData));
+    SuccessOrExit(error = ThreadStackMgr().SetThreadEnabled(true));
+exit:
+    return error;
+#else
+    return CHIP_ERROR_NOT_IMPLEMENTED;
+#endif // CHIP_ENABLE_OPENTHREAD
 }
 
 } // namespace DeviceLayer

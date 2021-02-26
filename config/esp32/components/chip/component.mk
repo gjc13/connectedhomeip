@@ -132,6 +132,7 @@ install-chip : $(OUTPUT_DIR)
 	  echo "pw_sys_io_BACKEND = \"//third_party/connectedhomeip/examples/platform/esp32/pw_sys_io:pw_sys_io_esp32\"" >> $(OUTPUT_DIR)/args.gn      ;\
 	  echo "dir_pw_third_party_nanopb = \"//third_party/connectedhomeip/third_party/nanopb/repo\"" >>$(OUTPUT_DIR)/args.gn         ;\
 	fi
+	echo "chip_enable_openthread = true" >> $(OUTPUT_DIR)/args.gn
 	echo "Written file $(OUTPUT_DIR)/args.gn"
 	cd $(CHIP_ROOT) && PW_ENVSETUP_QUIET=1 . scripts/activate.sh && cd $(COMPONENT_PATH) && gn gen --check --fail-on-unused-args $(OUTPUT_DIR)
 	cd $(COMPONENT_PATH); ninja $(subst 1,-v,$(filter 1,$(V))) -C $(OUTPUT_DIR) esp32

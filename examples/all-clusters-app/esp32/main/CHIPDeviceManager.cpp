@@ -26,6 +26,7 @@
 
 #include "CHIPDeviceManager.h"
 #include <app/util/basic-types.h>
+#include <platform/ThreadStackManager.h>
 #include <setup_payload/SetupPayload.h>
 #include <support/CHIPMem.h>
 #include <support/CodeUtils.h>
@@ -38,6 +39,7 @@ namespace chip {
 namespace DeviceManager {
 
 using namespace ::chip::DeviceLayer;
+using chip::DeviceLayer::ThreadStackMgr;
 
 void CHIPDeviceManager::CommonDeviceEventHandler(const ChipDeviceEvent * event, intptr_t arg)
 {
@@ -56,6 +58,9 @@ CHIP_ERROR CHIPDeviceManager::Init(CHIPDeviceManagerCallbacks * cb)
     CHIP_ERROR err;
     mCB = cb;
 
+    // Initialize the Thread stack.
+    err = ThreadStackMgr().InitThreadStack();
+    SuccessOrExit(err);
     // Initialize the CHIP stack.
     err = PlatformMgr().InitChipStack();
     SuccessOrExit(err);

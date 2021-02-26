@@ -17,6 +17,8 @@
  */
 
 #include "PairingCommand.h"
+#include <bits/stdint-uintn.h>
+#include <cstring>
 
 using namespace ::chip;
 
@@ -108,7 +110,17 @@ void PairingCommand::OnStatusUpdate(RendezvousSessionDelegate::Status status)
 void PairingCommand::OnNetworkCredentialsRequested(RendezvousDeviceCredentialsDelegate * callback)
 {
     ChipLogProgress(chipTool, "OnNetworkCredentialsRequested");
-    callback->SendNetworkCredentials(mSSID, mPassword);
+    uint8_t extpanid[] = { 0xde, 0xad, 0x00, 0xbe, 0xef, 0x00, 0xca, 0xfe };
+    uint8_t key[]      = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
+    DeviceLayer::Internal::DeviceNetworkInfo networkInfo;
+    memset(&networkInfo, 0, sizeof(networkInfo));
+    strncpy(networkInfo.ThreadNetworkName, "Openthread", sizeof(networkInfo.ThreadNetworkName));
+    memcpy(&networkInfo.ThreadExtendedPANId, extpanid, sizeof(extpanid));
+    memcpy(&networkInfo.ThreadMasterKey, key, sizeof(key));
+    networkInfo.ThreadPANId                      = 0x1234;
+    networkInfo.ThreadChannel                    = 11;
+    networkInfo.FieldPresent.ThreadExtendedPANId = true;
+    callback->SendThreadCredentials(networkInfo);
 }
 
 void PairingCommand::OnOperationalCredentialsRequested(const char * csr, size_t csr_length,
